@@ -32,12 +32,12 @@ function CharacterBox({ value, state }: CharacterBoxProps) {
   console.log(state);
 
   return (
-    <div
+    <span
       className={`inline-block border-2 border-gray-500 p-4 uppercase font-bold text-2xl text-center ${stateStyles}`}
       border-gray-500
     >
       {value}
-    </div>
+    </span>
   );
 }
 
