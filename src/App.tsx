@@ -7,7 +7,7 @@ import WordRow from "./WordRow";
 
 export default function App() {
   const state = useStore();
-  const [guess, setGuess] = useGuess();
+  const [guess, setGuess, addGuessLetter] = useGuess();
   const [showInvalidGuess, setInvalidGuess] = useState(false);
   const addGuess = useStore((s) => s.addGuess);
   const previousGuess = usePrevious(guess);
@@ -48,7 +48,11 @@ export default function App() {
       <header className="border-b border-gray-500 pb-4 mb-2">
         <h1 className="text-4xl text-center">Reacdle</h1>
       </header>
-      <Keyboard />
+      <Keyboard
+        onClick={(letter) => {
+          addGuessLetter(letter);
+        }}
+      />
       <main className="grid grid-rows-6 gap-4">
         {rows.map(({ guess, result }, index) => (
           <WordRow
@@ -82,13 +86,14 @@ export default function App() {
     </div>
   );
 }
-function useGuess(): [string, React.Dispatch<React.SetStateAction<string>>] {
+function useGuess(): [
+  string,
+  React.Dispatch<React.SetStateAction<string>>,
+  (letter: string) => void
+] {
   const addGuess = useStore((s) => s.addGuess);
   const [guess, setGuess] = useState("");
-
-  const previousGuess = usePrevious(guess);
-  const onKeyDown = (e: KeyboardEvent) => {
-    let letter = e.key;
+  const addGuessLetter = (letter: string) => {
     setGuess((curGuess) => {
       const newGuess = letter.length === 1 ? curGuess + letter : curGuess;
 
@@ -108,6 +113,11 @@ function useGuess(): [string, React.Dispatch<React.SetStateAction<string>>] {
       return newGuess;
     });
   };
+  const previousGuess = usePrevious(guess);
+  const onKeyDown = (e: KeyboardEvent) => {
+    let letter = e.key;
+    addGuessLetter(letter);
+  };
 
   useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
@@ -116,7 +126,7 @@ function useGuess(): [string, React.Dispatch<React.SetStateAction<string>>] {
     };
   }, []);
 
-  return [guess, setGuess];
+  return [guess, setGuess, addGuessLetter];
 }
 
 function usePrevious<T>(value: T): T {

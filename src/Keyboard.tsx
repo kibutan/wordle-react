@@ -1,6 +1,16 @@
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
+import React from "react";
 
-export default function Keyboard() {
+export default function Keyboard({
+  onClick: onClickProp,
+}: {
+  onClick: (letter: string) => void;
+}) {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const letter = e.currentTarget.textContent;
+    console.log(letter);
+
+    onClickProp(letter!);
+  };
   return (
     <div className="flex flex-col">
       {keyboardKeys.map((keyboardRow, rowIndex) => {
@@ -13,12 +23,11 @@ export default function Keyboard() {
                 styles += " bg-gray-400";
               }
 
+              if (key === "") {
+                styles += " pointer-events-none";
+              }
               return (
-                <button
-                  onClick={() => console.log(key)}
-                  key={index}
-                  className={styles}
-                >
+                <button onClick={onClick} key={index} className={styles}>
                   {key}
                 </button>
               );
