@@ -1,5 +1,11 @@
+import { isValidDateValue } from "@testing-library/user-event/dist/utils";
 import { describe, expect, it } from "vitest";
-import { computeGuess, getRandomWord, LetterState } from "./word-utils";
+import {
+  computeGuess,
+  getRandomWord,
+  isValidWord,
+  LetterState,
+} from "./word-utils";
 
 describe("getRandomWord", () => {
   it("random word", () => {
@@ -71,5 +77,15 @@ describe("computeGuess", () => {
       LetterState.Match,
       LetterState.Miss,
     ]);
+  });
+});
+
+describe("isValidWord", () => {
+  it("works with a valid word", () => {
+    expect(isValidWord("boost")).toBe(true);
+  });
+
+  it("works with a valid word", () => {
+    expect(isValidWord("lulza")).toBe(false);
   });
 });
